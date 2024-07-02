@@ -54,9 +54,10 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
             const token = jsonwebtoken_1.default.sign({
                 userId,
             }, myVar);
+            res.cookie("token", `Bearer ${token}`);
             res.json({
                 message: "User created successfully",
-                token: token,
+                token: `Bearer ${token}`,
             });
         }
         else {
@@ -90,8 +91,9 @@ router.get("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const token = jsonwebtoken_1.default.sign({
             userId,
         }, myVar);
+        res.cookie("token", `Bearer ${token}`);
         res.json({
-            token: token,
+            token: `Bearer ${token}`,
         });
         return;
     }
@@ -115,5 +117,4 @@ router.get("/bulk", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
     }
 }));
-console.log("User endpoint is working");
 exports.default = router;

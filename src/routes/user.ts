@@ -53,6 +53,7 @@ router.post("/signup", async (req: Request, res: Response) => {
         },
         myVar
       );
+      res.cookie("token", `Bearer ${token}`);
       res.json({
         message: "User created successfully",
         token: `Bearer ${token}`,
@@ -91,7 +92,7 @@ router.get("/signin", async (req: Request, res: Response) => {
       },
       myVar
     );
-
+    res.cookie("token", `Bearer ${token}`);
     res.json({
       token: `Bearer ${token}`,
     });

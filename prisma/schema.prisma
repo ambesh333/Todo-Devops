@@ -21,7 +21,7 @@ model User {
 }
 
 enum status_type {
-  Not_Staretd
+  Not_Started
   In_Progress
   Completed
 }
@@ -30,8 +30,8 @@ model Todo {
   id          Int         @id @default(autoincrement())
   title       String      @unique
   description String
-  date        DateTime
-  status      status_type @default(Not_Staretd)
+  date        DateTime    @default(now())
+  status      status_type @default(Not_Started)
   User        User?       @relation(fields: [userId], references: [id])
   userId      Int?
 }

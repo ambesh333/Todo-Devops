@@ -7,10 +7,17 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const routes_1 = __importDefault(require("./routes"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
+app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: "http://localhost:3001",
+}));
 app.use("/api/v1", routes_1.default);
 const port = 3000;
 app.listen(port, () => {
