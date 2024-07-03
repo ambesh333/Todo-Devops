@@ -23,13 +23,13 @@ jobs:
         with:
           context: .
           push: true
-          tags: ambesh333/Todo-devops:latest
+          tags: ambesh333/todo-devops:latest
 
       - name: Verify Pushed Image
         run: |
-          docker pull ambesh333/Todo-devops:latest
-          docker image inspect ambesh333/Todo-devops:latest
-          docker run --rm ambesh333/Todo-devops:latest echo "Container is running correctly"
+          docker pull ambesh333/todo-devops:latest
+          docker image inspect ambesh333/todo-devops:latest
+          docker run --rm ambesh333/todo-devops:latest echo "Container is running correctly"
 
       # - name: Deploy to EC2
       #   uses: appleboy/ssh-action@master
