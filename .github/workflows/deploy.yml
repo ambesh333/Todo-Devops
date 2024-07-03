@@ -26,7 +26,6 @@ jobs:
           tags: ambesh333/Todo-devops:latest
 
       - name: Verify Pushed Image
-        run: docker pull ambesh333/Todo-devops:latest
         run: |
           docker pull ambesh333/Todo-devops:latest
           docker image inspect ambesh333/Todo-devops:latest
