@@ -28,6 +28,7 @@ const taskBody = zod_1.default.object({
     description: zod_1.default.string(),
     status: zod_1.default.nativeEnum(StatusType).optional(),
 });
+//create a new todo
 router.post("/create", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, description } = taskBody.parse(req.body);
@@ -56,6 +57,7 @@ router.post("/create", middleware_1.default, (req, res) => __awaiter(void 0, voi
         res.status(500).json({ message: "Internal server error" });
     }
 }));
+//get all the todos
 router.get("/bulk", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.userId;
     if (!userId) {
@@ -80,6 +82,7 @@ router.get("/bulk", middleware_1.default, (req, res) => __awaiter(void 0, void 0
         res.status(500).json({ message: "Internal server error" });
     }
 }));
+//update the todo
 router.get("/update/:id", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const todoId = parseInt(req.params.id, 10);
     const userId = req.userId;

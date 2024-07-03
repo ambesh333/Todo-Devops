@@ -11,6 +11,10 @@ const userBody = zod.object({
   password: zod.string(),
 });
 
+interface User {
+  username: string;
+}
+
 router.post("/signup", async (req: Request, res: Response) => {
   const { success } = userBody.safeParse(req.body);
   if (!success) {
@@ -102,7 +106,7 @@ router.get("/signin", async (req: Request, res: Response) => {
 
 router.get("/bulk", async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany({
+    const users: User[] = await prisma.user.findMany({
       select: {
         username: true,
       },

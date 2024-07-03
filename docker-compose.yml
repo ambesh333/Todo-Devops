@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      # POSTGRES_DB: your_database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todo-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    depends_on:
+      - postgres
+    environment:
+      JWT_SECRET: todo
+      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/mydb?schema=public
+    ports:
+      - "3000:3000"
+    networks:
+      - todo-network
+
+networks:
+  todo-network:
+
+volumes:
+  postgres_data:
