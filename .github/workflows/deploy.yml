@@ -28,9 +28,9 @@ jobs:
       - name: Verify Pushed Image
         run: docker pull ambesh333/Todo-devops:latest
         run: |
-        docker pull ambesh333/Todo-devops:latest
-        docker image inspect ambesh333/Todo-devops:latest
-        docker run --rm ambesh333/Todo-devops:latest echo "Container is running correctly"
+          docker pull ambesh333/Todo-devops:latest
+          docker image inspect ambesh333/Todo-devops:latest
+          docker run --rm ambesh333/Todo-devops:latest echo "Container is running correctly"
 
       # - name: Deploy to EC2
       #   uses: appleboy/ssh-action@master
