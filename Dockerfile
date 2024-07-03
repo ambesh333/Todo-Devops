@@ -23,4 +23,4 @@ RUN npx tsc -b
 EXPOSE 3000
 
 # Start the application
-CMD ["sh", "-c", "npx prisma migrate dev --name DOCKER && npx prisma generate && node dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma generate && node dist/index.js"]
