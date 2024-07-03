@@ -11,10 +11,6 @@ const userBody = zod.object({
   password: zod.string(),
 });
 
-interface User {
-  username: string;
-}
-
 router.post("/signup", async (req: Request, res: Response) => {
   const { success } = userBody.safeParse(req.body);
   if (!success) {
