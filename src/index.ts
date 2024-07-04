@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import router from "./routes";
 import dotenv from "dotenv";
@@ -20,6 +20,12 @@ app.use(
 );
 
 app.use("/api/v1", router);
+
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
+    message: "Todo backend server is up",
+  });
+});
 
 const port = 3000;
 app.listen(port, () => {

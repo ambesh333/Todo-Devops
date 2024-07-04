@@ -1,6 +1,9 @@
 # Use an official Node.js runtime as a parent image
 FROM node:20-alpine
 
+# Install bash
+RUN apk add --no-cache bash
+
 # Set the working directory
 WORKDIR /usr/src/app
 
@@ -29,4 +32,4 @@ RUN npx tsc -b
 EXPOSE 3000
 
 # Use wait-for-it to wait for the database to be ready before starting the app
-CMD ["./wait-for-it.sh", "postgres:5432", "--", "sh", "-c", "npx prisma migrate deploy && npx prisma generate && node dist/index.js"]
+CMD ["./wait-for-it.sh", "postgres:5432", "--", "bash", "-c", "npx prisma migrate deploy && npx prisma generate && node dist/index.js"]

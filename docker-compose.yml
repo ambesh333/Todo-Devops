@@ -27,6 +27,19 @@ services:
       - "3000:3000"
     networks:
       - todo-network
+      
+  # todo:
+  #   image: ambesh333/todo-devops:latest
+  #   container_name: backend2
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     JWT_SECRET: todo
+  #     DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/mydb?schema=public
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - todo-network
 
 networks:
   todo-network:
