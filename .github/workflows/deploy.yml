@@ -1,3 +1,5 @@
+# the docker always run the old image while docker compose need to fix it
+
 name: Build and Deploy to Docker Hub
 
 on:

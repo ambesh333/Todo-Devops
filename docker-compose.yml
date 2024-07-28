@@ -12,25 +12,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - todo-network
-
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: backend
-    depends_on:
-      - postgres
-    environment:
-      JWT_SECRET: todo
-      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/mydb?schema=public
-    ports:
-      - "3000:3000"
-    networks:
-      - todo-network
       
-  # todo:
-  #   image: ambesh333/todo-devops:latest
-  #   container_name: backend2
+# USED TO RUN BACKEND FROM DOCKER FILE
+
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: backend
   #   depends_on:
   #     - postgres
   #   environment:
@@ -40,6 +29,21 @@ services:
   #     - "3000:3000"
   #   networks:
   #     - todo-network
+
+# USED TO RUN BACKEND FROM DOCKER HUB IMAGE
+
+  todo:
+    image: ambesh333/todo-devops:latest
+    container_name: backend2
+    depends_on:
+      - postgres
+    environment:
+      JWT_SECRET: todo
+      DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/mydb?schema=public
+    ports:
+      - "3000:3000"
+    networks:
+      - todo-network
 
 networks:
   todo-network:
