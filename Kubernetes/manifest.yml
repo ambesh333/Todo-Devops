@@ -83,63 +83,61 @@ spec:
   type: ClusterIP
 
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: web-apps-ingress
-  namespace: default
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: ambesh.com # Replace with your actual domain or IP address
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: todo-service
-                port:
-                  number: 3000
-
+# To use this forward the port using this command and access on 8080
+# kubectl port-forward service/todo-service 8080:3000
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-ingress-controller
+  name: todo-service
   namespace: default
 spec:
-  type: NodePort
   selector:
-    app.kubernetes.io/name: ingress-nginx
+    app: todo
   ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      nodePort: 30080  # Optionally specify a NodePort
-    - name: https
-      port: 443
-      targetPort: 443
-      nodePort: 30443  # Optionally specify a NodePort
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 32000
+  type: NodePort
+---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: web-apps-ingress
+#   namespace: default
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#     - host: ambesh.com # Replace with your actual domain or IP address
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: todo-service
+#                 port:
+#                   number: 3000
 
-# To use this forward the port using this command and access on 8080
-# kubectl port-forward service/todo-service 8080:3000
-
-# ---
 # apiVersion: v1
 # kind: Service
 # metadata:
-#   name: todo-service
+#   name: nginx-ingress-controller
 #   namespace: default
 # spec:
-#   selector:
-#     app: todo
-#   ports:
-#     - protocol: TCP
-#       port: 3000
-#       targetPort: 3000
-#       nodePort: 32000
 #   type: NodePort
-# ---
+#   selector:
+#     app.kubernetes.io/name: ingress-nginx
+#   ports:
+#     - name: http
+#       port: 80
+#       targetPort: 80
+#       nodePort: 30080  # Optionally specify a NodePort
+#     - name: https
+#       port: 443
+#       targetPort: 443
+#       nodePort: 30443  # Optionally specify a NodePort
+
