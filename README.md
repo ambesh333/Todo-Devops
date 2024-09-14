@@ -65,12 +65,7 @@
 
 2. **Set up environment variables:**
 
-   Create a `.env` file in the root directory and add the necessary environment variables. For example:
-
-   ```env
-   DATABASE_URL=your_database_url
-   PORT=3000
-   ```
+   Copy the .env.example file to .env and fill in the necessary variables
 
 3. **Build and run the containers:**
 
