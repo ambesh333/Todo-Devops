@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import zod from "zod";
 import authMiddleware from "../middleware";
 import { prisma } from "../db";
+import { monitor } from "../middleware";
 
 const router = Router();
 enum StatusType {
@@ -19,10 +20,12 @@ const taskBody = zod.object({
 interface AuthRequest extends Request {
   userId?: number;
 }
-//create a new todo
+
+// Create a new todo
 router.post(
   "/create",
   authMiddleware,
+  monitor("/task/create"),
   async (req: AuthRequest, res: Response) => {
     try {
       const { title, description } = taskBody.parse(req.body);
@@ -50,41 +53,61 @@ router.post(
           .status(400)
           .json({ message: "Invalid input", errors: error.errors });
       }
+      const prismaError = error as {
+        code?: string;
+        meta?: { target?: string[] };
+      };
+      if (
+        prismaError.code === "P2002" &&
+        prismaError.meta?.target?.includes("title")
+      ) {
+        return res
+          .status(409)
+          .json({ message: "A todo with this title already exists" });
+      }
       console.error("Error creating todo:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
 );
-//get all the todos
-router.get("/bulk", authMiddleware, async (req: AuthRequest, res: Response) => {
-  const userId = req.userId;
-  if (!userId) {
-    return res.status(401).json({ message: "User not authenticated" });
-  }
 
-  try {
-    const todos = await prisma.todo.findMany({
-      where: {
-        userId: userId,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        status: true,
-      },
-    });
+// Get all the todos
+router.get(
+  "/bulk",
+  authMiddleware,
+  monitor("/task/bulk"),
+  async (req: AuthRequest, res: Response) => {
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
-    res.json(todos);
-  } catch (error) {
-    console.error("Error fetching todos:", error);
-    res.status(500).json({ message: "Internal server error" });
+    try {
+      const todos = await prisma.todo.findMany({
+        where: {
+          userId: userId,
+        },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+        },
+      });
+
+      res.json(todos);
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
-});
-//update the todo
+);
+
+// Update the todo
 router.get(
   "/update/:id",
   authMiddleware,
+  monitor("/task/update/:id"),
   async (req: AuthRequest, res: Response) => {
     const todoId = parseInt(req.params.id, 10);
     const userId = req.userId;

@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   postgres:
@@ -15,26 +14,11 @@ services:
       
 # USED TO RUN BACKEND FROM DOCKER FILE
 
-  # backend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: backend
-  #   depends_on:
-  #     - postgres
-  #   environment:
-  #     JWT_SECRET: todo
-  #     DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/mydb?schema=public
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - todo-network
-
-# USED TO RUN BACKEND FROM DOCKER HUB IMAGE
-
-  todo:
-    image: ambesh333/todo-devops:latest
-    container_name: backend2
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
     depends_on:
       - postgres
     environment:
@@ -45,8 +29,64 @@ services:
     networks:
       - todo-network
 
+# USED TO RUN BACKEND FROM DOCKER HUB IMAGE
+
+#   todo:
+#     image: ambesh333/todo-devops:latest
+#     container_name: backend2
+#     depends_on:
+#       - postgres
+#     environment:
+#       JWT_SECRET: todo
+#       DATABASE_URL: postgresql://postgres:mysecretpassword@postgres:5432/mydb?schema=public
+#     ports:
+#       - "3000:3000"
+#     networks:
+#       - todo-network
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - todo-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3003:3000"
+    networks:
+      - todo-network
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+# use 127.0.0.1:3000 
+# http://prometheus:9090 use this to access prometheus data as network is on same docker network
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - todo-network
+
+# http://cadvisor:8080 use this to access cadvisor data as network is on same docker network
+
 networks:
   todo-network:
 
 volumes:
   postgres_data:
+

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
+import { Counter, Histogram, Registry } from "prom-client";
 
 interface AuthRequest extends Request {
   userId?: number;
@@ -33,3 +34,45 @@ const authMiddleware = (
 };
 
 export default authMiddleware;
+
+const register = new Registry();
+
+// Define a counter metric
+const apiRequestCounter = new Counter({
+  name: "api_request_count",
+  help: "Count of requests to API endpoints",
+  labelNames: ["method", "route"],
+});
+
+// Define a histogram metric for request duration
+const httpRequestDurationMicroseconds = new Histogram({
+  name: "http_request_duration_ms",
+  help: "Duration of HTTP requests in ms",
+  labelNames: ["method", "route", "code"],
+});
+
+// Register the metrics
+register.registerMetric(apiRequestCounter);
+register.registerMetric(httpRequestDurationMicroseconds);
+
+export const monitor = (route: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const end = httpRequestDurationMicroseconds.startTimer();
+    apiRequestCounter.inc({
+      method: req.method,
+      route: route,
+    });
+
+    res.on("finish", () => {
+      end({
+        method: req.method,
+        route: route,
+        code: res.statusCode,
+      });
+    });
+
+    next();
+  };
+};
+
+export { register };
