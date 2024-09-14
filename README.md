@@ -1,4 +1,4 @@
-# Project Name
+# TODO-DEVOPS
 
 ## Prerequisites
 
@@ -80,4 +80,5 @@
 **Access Prometheus and Grafana:**
 
     - Prometheus: Navigate to `http://localhost:9090`
-    - Grafana: Navigate to `http://localhost:3003` and log in with the credentials `username:admin,password:admin`
+    - Grafana: Navigate to `http://localhost:3003`
+    log in with the credentials `username:admin,password:admin`
